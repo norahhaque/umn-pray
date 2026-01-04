@@ -1,5 +1,6 @@
 import Script from "next/script";
 import Image from "next/image";
+import Link from "next/link";
 import { getAllPrayerSpaces } from "@/lib/queries";
 import PrayerSpaceList from "@/components/PrayerSpaceList";
 import heroImage from "@/public/images/umn-twin-cities-northrop.jpg";
@@ -72,7 +73,7 @@ export default async function HomePage() {
               No prayer spaces have been added yet.
             </p>
             <p className="text-sm text-umn-gray">
-              Visit <a href="/studio" className="text-umn-maroon hover:underline">/studio</a> to add prayer spaces.
+              Visit <Link href="/studio" className="text-umn-maroon hover:underline">/studio</Link> to add prayer spaces.
             </p>
           </div>
         ) : (

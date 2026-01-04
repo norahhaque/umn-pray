@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -18,7 +19,7 @@ export default function RootLayout({
         {/* Header with logo on left */}
         <header className="bg-white border-b border-umn-light-gray">
           <div className="py-4 pl-2 md:pl-10">
-            <a href="/" className="flex items-center">
+            <Link href="/" className="flex items-center">
               <Image
                 src="/images/logo.png"
                 alt="UMN Pray Logo"
@@ -26,7 +27,7 @@ export default function RootLayout({
                 height={40}
                 className="h-10 w-auto"
               />
-            </a>
+            </Link>
           </div>
         </header>
 

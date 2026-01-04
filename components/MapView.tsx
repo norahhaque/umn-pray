@@ -49,6 +49,7 @@ export default function MapView({ spaces, userLocation }: MapViewProps) {
     };
 
     initializeMap();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Update markers when spaces change (due to filtering)
@@ -56,6 +57,7 @@ export default function MapView({ spaces, userLocation }: MapViewProps) {
     if (googleMapRef.current && isInitialized.current) {
       addMarkers(googleMapRef.current, spaces);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [spaces]);
 
   // Update user location marker when location changes
