@@ -4,7 +4,7 @@
 
 UMN Pray is a web application that helps students, faculty, and staff find accessible prayer spaces across all UMN campuses. The platform provides detailed information about each space including location, amenities, capacity, privacy features, and accessibility instructions.
 
-🌐 **Live Site**: [umnpray.org](https://umnpray.org)
+**Live Site**: [umnpray.org](https://umnpray.org)
 
 ---
 
@@ -176,7 +176,7 @@ Changes appear on the live site within seconds!
 
 If you notice incorrect information, want to suggest a new space, or have feedback:
 
-📧 **Email us:**
+**Email us:**
 - Undergraduate Student Government: [usg@umn.edu](mailto:usg@umn.edu)
 - CSE Student Board: [sesb@umn.edu](mailto:sesb@umn.edu)
 
