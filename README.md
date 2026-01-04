@@ -58,6 +58,18 @@ This project is a collaborative initiative by student leaders to make campus mor
 
 ---
 
+## Design Resources
+
+**Figma Design File**: [View Design Mockups](https://www.figma.com/design/CU1t1FZOoG8H0329q4L81R/UMN-Pray?node-id=0-1&t=gX48xOfIwakVMDjj-1)
+
+The original design mockups and design system are available in Figma, including:
+- Color palette and UMN brand guidelines
+- Component designs and layouts
+- Mobile and desktop responsive breakpoints
+- Typography specifications
+
+---
+
 ## Project Structure
 
 ```
