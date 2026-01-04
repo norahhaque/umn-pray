@@ -16,8 +16,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="antialiased m-0 p-0">
+    <html lang="en" className="bg-umn-green">
+      <body className="antialiased m-0 p-0 bg-white">
         {/* Header with logo on left */}
         <header className="bg-white border-b border-umn-light-gray">
           <div className="py-4 pl-2 md:pl-10">
