@@ -14,7 +14,7 @@ export default defineType({
       name: "name",
       title: "Prayer Space Name",
       type: "string",
-      description: "Name/title of the prayer space (e.g., 'AMCC', 'Lind Hall', 'Coffman Prayer Room')",
+      description: "Name/title of the prayer space (e.g., 'AMCC', 'Lind Space')",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -30,24 +30,16 @@ export default defineType({
     }),
     defineField({
       name: "building",
-      title: "Building Abbreviation/Code",
+      title: "Building Name/Abbreviation",
       type: "string",
-      description: "Building abbreviation (e.g., 'CSE', 'Coffman', 'Lind')",
+      description: "Name/title of the building (e.g., 'CSE', 'Coffman', 'Lind')",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "room",
       title: "Room Number",
       type: "string",
-      description: "Room number including floor (e.g., '234', '3-180', 'B12')",
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: "description",
-      title: "Description",
-      type: "array",
-      of: [{ type: "block" }],
-      description: "Detailed description of the prayer space",
+      description: "Room number including floor (e.g., '234', '3-180', 'B12'). Leave blank if no specific room.",
     }),
 
     // Location
@@ -68,10 +60,25 @@ export default defineType({
     }),
     defineField({
       name: "address",
-      title: "Building Address or Name",
+      title: "Building Address",
       type: "string",
-      description: "Full building name or address for Google Maps (e.g., 'Coffman Memorial Union, Minneapolis, MN' or '300 Washington Avenue SE, Minneapolis, MN 55455')",
+      description: "Full building address for Google Maps (e.g., 'Appleby Hall, 128 Pleasant St SE, Minneapolis, MN 55455')",
       validation: (Rule) => Rule.required(),
+    }),
+    // Hidden fields - auto-calculated from address
+    defineField({
+      name: "latitude",
+      title: "Latitude",
+      type: "number",
+      hidden: true,
+      description: "Auto-calculated from address for distance calculations",
+    }),
+    defineField({
+      name: "longitude",
+      title: "Longitude",
+      type: "number",
+      hidden: true,
+      description: "Auto-calculated from address for distance calculations",
     }),
 
     // Amenities - Boolean checkboxes
@@ -125,8 +132,7 @@ export default defineType({
       name: "genderPrivacyDetails",
       title: "Gender/Privacy Details",
       type: "text",
-      description:
-        "Explain gender separation, divider usage, or privacy arrangements (e.g., 'Prayer area divided by a curtain')",
+      description: "Describe gender separation (if any) and whether the space is visible from outside.",
       rows: 3,
     }),
     defineField({
@@ -144,7 +150,7 @@ export default defineType({
       title: "Photos",
       type: "array",
       of: [{ type: "image" }],
-      description: "Upload 0-5 photos of the prayer space",
+      description: "Upload at 1-5 photos of the prayer space",
       options: {
         layout: "grid",
       },
@@ -163,7 +169,7 @@ export default defineType({
     prepare({ title, building, room, media }) {
       return {
         title: title,
-        subtitle: building && room ? `${building} ${room}` : building || room,
+        subtitle: room ? `${building} ${room}` : building,
         media: media,
       };
     },

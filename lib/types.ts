@@ -10,10 +10,11 @@ export interface PrayerSpace {
   };
   building: string; // Building abbreviation/code (e.g., "CSE", "Coffman")
   buildingFullName?: string; // Full building name
-  room: string; // Room number including floor (e.g., "234" = floor 2 room 34)
-  description?: any[]; // Rich text block content
+  room?: string; // Room number including floor (e.g., "234" = floor 2 room 34)
   campusLocation: "East Bank" | "West Bank" | "St. Paul";
   address: string; // Building address or name for Google Maps
+  latitude?: number; // Auto-calculated from address
+  longitude?: number; // Auto-calculated from address
 
   // Amenities
   hasPrayerRugs?: boolean;

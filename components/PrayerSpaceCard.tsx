@@ -25,7 +25,13 @@ const AMENITY_COLORS: Record<string, string> = {
  * Prayer Space Card Component
  * Displays a summary card for each prayer space on the main listing page
  */
-export default function PrayerSpaceCard({ space }: { space: PrayerSpace }) {
+export default function PrayerSpaceCard({
+  space,
+  distance
+}: {
+  space: PrayerSpace;
+  distance?: number;
+}) {
   // Collect active amenities to display
   const amenities = [];
   if (space.hasPrayerRugs) amenities.push("Prayer Rugs");
@@ -53,7 +59,7 @@ export default function PrayerSpaceCard({ space }: { space: PrayerSpace }) {
     : null;
 
   // Format location subtitle: "Building Abbreviation Room#"
-  const locationSubtitle = `${space.building} ${space.room}`;
+  const locationSubtitle = space.room ? `${space.building} ${space.room}` : space.building;
 
   return (
     <Link
@@ -77,9 +83,18 @@ export default function PrayerSpaceCard({ space }: { space: PrayerSpace }) {
         <h3 className="text-xl font-semibold text-umn-maroon mb-2">
           {space.name}
         </h3>
-        <p className="text-sm text-umn-gray mb-4">
+        <p className="text-sm text-umn-gray mb-2">
           {locationSubtitle}
         </p>
+        {distance !== undefined && (
+          <p className="text-sm font-medium text-umn-maroon mb-4 flex items-center gap-1">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            {distance} {distance === 1 ? 'mile' : 'miles'} away
+          </p>
+        )}
 
         {/* Amenity tags with color mapping */}
         {amenities.length > 0 && (

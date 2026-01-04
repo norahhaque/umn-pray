@@ -29,10 +29,13 @@ export default async function PrayerSpaceDetailPage({
     notFound();
   }
 
-  // Build Google Maps URLs using address
+  // Build Google Maps URLs using coordinates if available, otherwise use address
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
-  const mapUrl = `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${encodeURIComponent(space.address)}&zoom=17`;
-  const googleMapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(space.address)}`;
+  const mapQuery = space.latitude && space.longitude
+    ? `${space.latitude},${space.longitude}`
+    : space.address;
+  const mapUrl = `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${encodeURIComponent(mapQuery)}&zoom=17`;
+  const googleMapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
 
   // Process photos for carousel
   const photoUrls = space.photos?.map((photo) =>
@@ -53,10 +56,20 @@ export default async function PrayerSpaceDetailPage({
       </Link>
 
       {/* Title */}
-      <h1 className="text-4xl font-bold text-umn-maroon mb-2">{space.name}</h1>
-      <p className="text-lg text-gray-600 mb-8">
-        {space.building} {space.room}
-      </p>
+      <div className="flex justify-between items-start flex-wrap gap-4 mb-8">
+        <div>
+          <h1 className="text-4xl font-bold text-umn-maroon mb-2">{space.name}</h1>
+          <p className="text-lg text-gray-600">
+            {space.room ? `${space.building} ${space.room}` : space.building}
+          </p>
+        </div>
+        <a
+          href={`mailto:usg@umn.edu,sesb@umn.edu?subject=UMN%20Pray%20-%20Issue%20with%20${encodeURIComponent(space.name)}`}
+          className="text-sm text-umn-maroon hover:underline"
+        >
+          Report an Issue
+        </a>
+      </div>
 
       {/* Main Grid: 3 columns on desktop, stacked on mobile */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:items-stretch">

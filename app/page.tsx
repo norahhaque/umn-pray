@@ -1,5 +1,8 @@
+import Script from "next/script";
+import Image from "next/image";
 import { getAllPrayerSpaces } from "@/lib/queries";
 import PrayerSpaceList from "@/components/PrayerSpaceList";
+import heroImage from "@/public/images/umn-twin-cities-northrop.jpg";
 
 /**
  * Home Page - Lists all prayer spaces
@@ -7,16 +10,33 @@ import PrayerSpaceList from "@/components/PrayerSpaceList";
  */
 export default async function HomePage() {
   const spaces = await getAllPrayerSpaces();
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
   return (
-    <div>
-      {/* Hero Section with background image */}
-      <div
-        className="relative w-full h-[400px] md:h-[500px] bg-cover bg-center"
-        style={{ backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.06)), url('/images/umn-twin-cities-northrop.jpg')" }}
-      >
+    <>
+      <Script
+        src={`https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`}
+        strategy="beforeInteractive"
+      />
+      <div>
+        {/* Hero Section with background image */}
+      <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden">
+        {/* Next.js Image with blur placeholder */}
+        <Image
+          src={heroImage}
+          alt="UMN Twin Cities Northrop"
+          fill
+          priority
+          placeholder="blur"
+          className="object-cover"
+          sizes="100vw"
+        />
+
+        {/* White overlay for subtle lightening effect */}
+        <div className="absolute inset-0 bg-white opacity-[0.06]" />
+
         {/* Text overlay */}
-        <div className="absolute inset-0 flex flex-col justify-end pb-11 md:pb-14 px-2 md:px-8 lg:px-10">
+        <div className="absolute inset-0 flex flex-col justify-end pb-12 md:pb-14 px-2 md:px-8 lg:px-10 z-10">
           <h1
             className="text-white"
             style={{
@@ -56,9 +76,10 @@ export default async function HomePage() {
             </p>
           </div>
         ) : (
-          <PrayerSpaceList spaces={spaces} />
+          <PrayerSpaceList spaces={spaces} showHeroButton={true} />
         )}
       </div>
-    </div>
+      </div>
+    </>
   );
 }
