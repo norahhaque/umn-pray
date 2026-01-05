@@ -35,6 +35,36 @@ export default function PrayerSpaceList({ spaces, showHeroButton = false }: Pray
   const [spacesWithDistance, setSpacesWithDistance] = useState<SpaceWithDistance[]>(spaces);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("list");
+  const [showAll, setShowAll] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  const INITIAL_DISPLAY_COUNT = isMobile ? 6 : 9;
+
+  // Detect mobile/desktop for initial display count
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const handleToggleShowAll = () => {
+    if (showAll) {
+      // Scroll to top when collapsing
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setShowAll(false);
+    } else {
+      // Trigger animation when expanding
+      setIsAnimating(true);
+      setShowAll(true);
+      // Reset animation state after animation completes
+      setTimeout(() => setIsAnimating(false), 1000);
+    }
+  };
 
   // Handle "Sort by Distance" button click
   const handleFindNearest = async () => {
@@ -93,10 +123,23 @@ export default function PrayerSpaceList({ spaces, showHeroButton = false }: Pray
     }
   }, [nearMeActive, spaces]);
 
+  // Reset showAll when filters change
+  useEffect(() => {
+    setShowAll(false);
+  }, [selectedCampus, nearMeActive, viewMode]);
+
   // Filter spaces based on selected campus
-  let displayedSpaces = selectedCampus === "All"
+  let filteredSpaces = selectedCampus === "All"
     ? spacesWithDistance
     : spacesWithDistance.filter(space => space.campusLocation === selectedCampus);
+
+  // Apply "show more" limit only in list view
+  let displayedSpaces = filteredSpaces;
+  if (viewMode === "list" && !showAll && filteredSpaces.length > INITIAL_DISPLAY_COUNT) {
+    displayedSpaces = filteredSpaces.slice(0, INITIAL_DISPLAY_COUNT);
+  }
+
+  const hasMore = viewMode === "list" && filteredSpaces.length > INITIAL_DISPLAY_COUNT;
 
   return (
     <div>
@@ -106,9 +149,9 @@ export default function PrayerSpaceList({ spaces, showHeroButton = false }: Pray
           <button
             onClick={handleFindNearest}
             disabled={isLoadingLocation}
-            className="w-full flex items-center justify-center gap-3 bg-umn-maroon text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-umn-maroon-light transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-2 bg-umn-maroon text-white px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-umn-maroon-light transition-colors shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
@@ -199,15 +242,60 @@ export default function PrayerSpaceList({ spaces, showHeroButton = false }: Pray
           </p>
         </div>
       ) : viewMode === "list" ? (
-        <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          {displayedSpaces.map((space) => (
-            <PrayerSpaceCard
-              key={space._id}
-              space={space}
-              distance={nearMeActive ? space.distance : undefined}
-            />
-          ))}
-        </div>
+        <>
+          <div className="relative">
+            <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+              {displayedSpaces.map((space, index) => {
+                const isNewlyRevealed = showAll && index >= INITIAL_DISPLAY_COUNT;
+                const animationDelay = isNewlyRevealed && isAnimating
+                  ? `${(index - INITIAL_DISPLAY_COUNT) * 50}ms`
+                  : '0ms';
+
+                return (
+                  <div
+                    key={space._id}
+                    className={isNewlyRevealed && isAnimating ? 'animate-fade-in' : ''}
+                    style={{ animationDelay }}
+                  >
+                    <PrayerSpaceCard
+                      space={space}
+                      distance={nearMeActive ? space.distance : undefined}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Gradient overlay */}
+            {hasMore && !showAll && (
+              <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none" />
+            )}
+          </div>
+
+          {/* See more button - below the grid */}
+          {hasMore && !showAll && (
+            <div className="flex justify-center mt-8">
+              <button
+                onClick={handleToggleShowAll}
+                className="text-umn-maroon text-sm font-medium tracking-wide hover:scale-105 transition-transform duration-200 ease-out"
+              >
+                See more
+              </button>
+            </div>
+          )}
+
+          {/* Show Less option when expanded */}
+          {showAll && hasMore && (
+            <div className="flex justify-center mt-10">
+              <button
+                onClick={handleToggleShowAll}
+                className="text-umn-maroon text-sm font-medium tracking-wide hover:scale-105 transition-transform duration-200 ease-out"
+              >
+                Show less
+              </button>
+            </div>
+          )}
+        </>
       ) : (
         <div className="h-[600px] w-full">
           <MapView spaces={displayedSpaces} userLocation={userLocation} />

@@ -13,8 +13,31 @@ export default async function HomePage() {
   const spaces = await getAllPrayerSpaces();
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
+  // Structured data for SEO
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "UMN Pray",
+    "url": "https://umnpray.org",
+    "description": "Find prayer and reflection spaces at the University of Minnesota Twin Cities campus",
+    "publisher": {
+      "@type": "Organization",
+      "name": "UMN Student Government & CSE Student Board",
+    },
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://umnpray.org/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  };
+
   return (
     <>
+      <Script
+        id="structured-data"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <Script
         src={`https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`}
         strategy="beforeInteractive"
