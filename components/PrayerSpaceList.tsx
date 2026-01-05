@@ -284,14 +284,14 @@ export default function PrayerSpaceList({ spaces, showHeroButton = false }: Pray
             </div>
           )}
 
-          {/* Show Less option when expanded */}
+          {/* See Less option when expanded */}
           {showAll && hasMore && (
             <div className="flex justify-center mt-10">
               <button
                 onClick={handleToggleShowAll}
                 className="text-umn-maroon text-sm font-medium tracking-wide hover:scale-105 transition-transform duration-200 ease-out"
               >
-                Show less
+                See less
               </button>
             </div>
           )}
