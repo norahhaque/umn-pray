@@ -98,6 +98,13 @@ export default function RootLayout({
               {/* Contact and Privacy links */}
               <div className="flex gap-3 mt-1">
                 <a
+                  href="/about"
+                  className="text-umn-maroon text-xs hover:underline"
+                >
+                  About
+                </a>
+                <span className="text-umn-maroon text-xs">·</span>
+                <a
                   href="/privacy"
                   className="text-umn-maroon text-xs hover:underline"
                 >

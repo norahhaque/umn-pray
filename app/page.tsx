@@ -65,7 +65,7 @@ export default async function HomePage() {
             className="text-white"
             style={{
               fontFamily: 'var(--font-league-spartan)',
-              fontSize: 'clamp(48px, 10vw, 115px)',
+              fontSize: 'clamp(82px, 10vw, 115px)',
               fontWeight: 700,
               lineHeight: 0.75,
               marginBottom: 0
@@ -77,7 +77,7 @@ export default async function HomePage() {
             className="text-white max-w-md"
             style={{
               fontFamily: 'var(--font-inter)',
-              fontSize: 'clamp(12px, 2vw, 20px)',
+              fontSize: 'clamp(18px, 2vw, 20px)',
               fontWeight: 400,
               lineHeight: 1,
               marginTop: 'clamp(-3px, -0.7vw, -6px)'

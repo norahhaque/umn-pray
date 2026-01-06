@@ -1,8 +1,11 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { League_Spartan } from "next/font/google";
 import { getPrayerSpaceBySlug, getAllPrayerSpaces } from "@/lib/queries";
 import { urlFor } from "@/lib/sanity-image";
 import PhotoCarousel from "@/components/PhotoCarousel";
+
+const leagueSpartan = League_Spartan({ subsets: ["latin"] });
 
 /**
  * Prayer Space Detail Page
@@ -58,8 +61,8 @@ export default async function PrayerSpaceDetailPage({
       {/* Title */}
       <div className="flex justify-between items-start flex-wrap gap-4 mb-8">
         <div>
-          <h1 className="text-4xl font-bold text-umn-maroon mb-2">{space.name}</h1>
-          <p className="text-lg text-gray-600">
+          <h1 className={`${leagueSpartan.className} font-bold text-umn-maroon mb-3 md:mb-0 leading-none`} style={{ fontSize: 'clamp(44px, 8vw, 56px)' }}>{space.name}</h1>
+          <p className="text-lg text-gray-600 md:mt-0">
             {space.room ? `${space.building} ${space.room}` : space.building}
           </p>
         </div>

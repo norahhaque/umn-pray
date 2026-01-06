@@ -28,44 +28,44 @@ export default function PrivacyPage() {
 
       <div className="prose max-w-none">
         <section className="mb-8">
-          <p className="text-sm text-gray-700 leading-relaxed mb-4">
+          <p className="text-base text-gray-700 leading-relaxed mb-4">
             UMN Pray is committed to protecting your privacy. This Privacy Policy explains how we handle information when you use our website and services to locate prayer spaces at the University of Minnesota.
           </p>
         </section>
 
         <section className="mb-8">
           <h2 className="text-xl font-semibold text-umn-maroon mb-4">Location Data</h2>
-          <p className="text-sm text-gray-700 leading-relaxed mb-4">
+          <p className="text-base text-gray-700 leading-relaxed mb-4">
             When you use the &ldquo;Sort by Distance&rdquo; feature, we request access to your device&apos;s location only to calculate the distance between your current position and available prayer spaces.
           </p>
-          <p className="text-sm text-gray-700 leading-relaxed mb-4">
+          <p className="text-base text-gray-700 leading-relaxed mb-4">
             Your location data is:
           </p>
-          <ul className="list-disc pl-6 text-sm text-gray-700 mb-4 space-y-2">
+          <ul className="list-disc pl-6 text-base text-gray-700 mb-4 space-y-2">
             <li>Processed entirely within your web browser</li>
             <li>Used only for distance calculations</li>
             <li>Never stored or retained in any form</li>
             <li>Never shared with third parties</li>
             <li>Immediately discarded after distance calculations are complete</li>
           </ul>
-          <p className="text-sm text-gray-700 leading-relaxed mb-4">
+          <p className="text-base text-gray-700 leading-relaxed mb-4">
             You have full control over location access and may deny permission at any time through your browser settings. Denying location access will not affect your ability to browse prayer spaces; you simply will not be able to sort them by distance from your location.
           </p>
         </section>
 
         <section className="mb-8">
           <h2 className="text-xl font-semibold text-umn-maroon mb-4">Information We Collect</h2>
-          <p className="text-sm text-gray-700 leading-relaxed mb-4">
+          <p className="text-base text-gray-700 leading-relaxed mb-4">
             UMN Pray does not collect, store, or process any personal information. We do not use cookies, analytics, or tracking technologies.
           </p>
         </section>
 
         <section className="mb-8">
           <h2 className="text-xl font-semibold text-umn-maroon mb-4">Third-Party Services</h2>
-          <p className="text-sm text-gray-700 leading-relaxed mb-4">
+          <p className="text-base text-gray-700 leading-relaxed mb-4">
             Our website utilizes the following third-party services:
           </p>
-          <ul className="list-disc pl-6 text-sm text-gray-700 mb-4 space-y-2">
+          <ul className="list-disc pl-6 text-base text-gray-700 mb-4 space-y-2">
             <li>
               <span className="text-umn-maroon font-medium">Google Maps API:</span> Used to display interactive maps and calculate geographic distances. Google&apos;s use of location data is governed by their own privacy policy.
             </li>
@@ -77,10 +77,10 @@ export default function PrivacyPage() {
 
         <section className="mb-8">
           <h2 className="text-xl font-semibold text-umn-maroon mb-4">Contact Information</h2>
-          <p className="text-sm text-gray-700 leading-relaxed mb-4">
+          <p className="text-base text-gray-700 leading-relaxed mb-4">
             If you have any questions or concerns about this Privacy Policy, please contact:
           </p>
-          <ul className="list-none text-sm text-gray-700 mb-4 space-y-2">
+          <ul className="list-none text-base text-gray-700 mb-4 space-y-2">
             <li>
               <span className="text-umn-maroon font-medium">Undergraduate Student Government:</span>{" "}
               <a href="mailto:usg@umn.edu" className="text-umn-maroon hover:underline">
