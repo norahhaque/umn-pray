@@ -91,7 +91,7 @@ export default function AboutPage() {
             <p className="text-base text-gray-800 leading-relaxed text-center">
               The Wellbeing Project project grew out of listening, listening to students who struggled
               to find a place to offer their religious ritual, reflect, or decompress and recognizing
-              that these challenges aren't isolated experiences but systemic gaps in the university system.
+              that these challenges aren&apos;t isolated experiences but systemic gaps in the university system.
               By advocating for better spaces and creating tools like this website, we aim to close these
               gaps and ensure students can show up fully as themselves, without having to compromise their
               identities, beliefs, or wellbeing to succeed on our campus.
