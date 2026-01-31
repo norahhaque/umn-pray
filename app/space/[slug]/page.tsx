@@ -42,7 +42,7 @@ export default async function PrayerSpaceDetailPage({
 
   // Process photos for carousel
   const photoUrls = space.photos?.map((photo) =>
-    urlFor(photo).width(600).height(800).url()
+    urlFor(photo).width(1200).height(1600).url()
   ) || [];
 
   return (
