@@ -149,7 +149,14 @@ export default defineType({
       name: "photos",
       title: "Photos",
       type: "array",
-      of: [{ type: "image" }],
+      of: [
+        {
+          type: "image",
+          options: {
+            accept: "image/*,.heic,.heif",
+          },
+        },
+      ],
       description: "Upload at 1-5 photos of the prayer space",
       options: {
         layout: "grid",
