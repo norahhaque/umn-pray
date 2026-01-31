@@ -55,7 +55,7 @@ export default function PrayerSpaceCard({
   // Get first photo for thumbnail if available
   const firstPhoto = space.photos?.[0];
   const imageUrl = firstPhoto
-    ? urlFor(firstPhoto).width(800).height(600).url()
+    ? urlFor(firstPhoto).width(600).height(450).quality(85).url()
     : null;
 
   // Format location subtitle: "Building Abbreviation Room#"
