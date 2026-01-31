@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 
 interface PhotoCarouselProps {
@@ -11,11 +11,13 @@ interface PhotoCarouselProps {
 
 /**
  * Photo Carousel Component
- * Displays a carousel of photos with navigation arrows and indicators
+ * Displays a carousel of photos with navigation arrows, indicators, and swipe support
  * Aspect ratio: 3:4 (portrait) on mobile, stretches on desktop if stretchToFit is true
  */
 export default function PhotoCarousel({ photos, alt, stretchToFit = false }: PhotoCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
 
   if (!photos || photos.length === 0) {
     return null;
@@ -37,21 +39,60 @@ export default function PhotoCarousel({ photos, alt, stretchToFit = false }: Pho
     setCurrentIndex(index);
   };
 
+  // Swipe handlers
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStartX.current === null || touchEndX.current === null) return;
+
+    const swipeDistance = touchStartX.current - touchEndX.current;
+    const minSwipeDistance = 50; // Minimum distance for a swipe
+
+    if (swipeDistance > minSwipeDistance) {
+      // Swiped left -> go to next
+      goToNext();
+    } else if (swipeDistance < -minSwipeDistance) {
+      // Swiped right -> go to previous
+      goToPrevious();
+    }
+
+    // Reset
+    touchStartX.current = null;
+    touchEndX.current = null;
+  };
+
   // Only show navigation if there's more than 1 photo
   const showNavigation = photos.length > 1;
 
   return (
-    <div className={`relative w-full bg-gray-100 rounded-lg overflow-hidden group ${
-      stretchToFit ? 'aspect-[3/4] lg:aspect-auto lg:h-full' : 'aspect-[3/4]'
-    }`}>
-      {/* Current Photo */}
-      <Image
-        src={photos[currentIndex]}
-        alt={`${alt} photo ${currentIndex + 1}`}
-        fill
-        className="object-cover"
-        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-      />
+    <div
+      className={`relative w-full bg-gray-100 rounded-lg overflow-hidden group ${
+        stretchToFit ? 'aspect-[3/4] lg:aspect-auto lg:h-full' : 'aspect-[3/4]'
+      }`}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
+      {/* Render all photos for preloading, but only show current */}
+      {photos.map((photo, index) => (
+        <Image
+          key={photo}
+          src={photo}
+          alt={`${alt} photo ${index + 1}`}
+          fill
+          className={`object-cover transition-opacity duration-300 ${
+            index === currentIndex ? "opacity-100" : "opacity-0"
+          }`}
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          priority={index === 0}
+        />
+      ))}
 
       {/* Navigation Arrows - Only show if multiple photos */}
       {showNavigation && (
