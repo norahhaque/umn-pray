@@ -33,21 +33,42 @@ export default function PrayerSpaceList({ spaces, showHeroButton = false }: Pray
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // Read initial state from URL params
-  const initialCampus = (searchParams.get("campus") as CampusFilter) || "All";
-  const initialShowAll = searchParams.get("showAll") === "true";
-  const initialViewMode = (searchParams.get("view") as ViewMode) || "list";
+  // Read state from URL params
+  const urlCampus = (searchParams.get("campus") as CampusFilter) || "All";
+  const urlShowAll = searchParams.get("showAll") === "true";
+  const urlViewMode = (searchParams.get("view") as ViewMode) || "list";
 
-  const [selectedCampus, setSelectedCampus] = useState<CampusFilter>(initialCampus);
+  const [selectedCampus, setSelectedCampus] = useState<CampusFilter>(urlCampus);
   const [nearMeActive, setNearMeActive] = useState(false);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [spacesWithDistance, setSpacesWithDistance] = useState<SpaceWithDistance[]>(spaces);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
-  const [viewMode, setViewMode] = useState<ViewMode>(initialViewMode);
-  const [showAll, setShowAll] = useState(initialShowAll);
+  const [viewMode, setViewMode] = useState<ViewMode>(urlViewMode);
+  const [showAll, setShowAll] = useState(urlShowAll);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const isInitialMount = useRef(true);
+  const isRestoringFromURL = useRef(false);
+
+  // Sync state FROM URL params when they change (e.g., browser back/forward)
+  useEffect(() => {
+    // Skip on initial mount since useState already used the initial values
+    if (isInitialMount.current) {
+      return;
+    }
+
+    // Mark that we're restoring from URL to prevent the reset useEffect from firing
+    isRestoringFromURL.current = true;
+
+    setSelectedCampus(urlCampus);
+    setViewMode(urlViewMode);
+    setShowAll(urlShowAll);
+
+    // Reset the flag after state updates have been processed
+    setTimeout(() => {
+      isRestoringFromURL.current = false;
+    }, 0);
+  }, [urlCampus, urlShowAll, urlViewMode]);
 
   const INITIAL_DISPLAY_COUNT = isMobile ? 6 : 9;
 
@@ -167,10 +188,14 @@ export default function PrayerSpaceList({ spaces, showHeroButton = false }: Pray
     }
   }, [nearMeActive, spaces]);
 
-  // Reset showAll when filters change (but not on initial mount)
+  // Reset showAll when filters change (but not on initial mount or URL restore)
   useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false;
+      return;
+    }
+    // Don't reset if we're restoring state from URL (browser back/forward)
+    if (isRestoringFromURL.current) {
       return;
     }
     setShowAll(false);
