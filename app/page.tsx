@@ -1,6 +1,7 @@
 import Script from "next/script";
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 import { getAllPrayerSpaces } from "@/lib/queries";
 import PrayerSpaceList from "@/components/PrayerSpaceList";
 import heroImage from "@/public/images/umn-twin-cities-northrop.jpg";
@@ -100,7 +101,9 @@ export default async function HomePage() {
             </p>
           </div>
         ) : (
-          <PrayerSpaceList spaces={spaces} showHeroButton={true} />
+          <Suspense fallback={<div className="text-center py-12">Loading...</div>}>
+            <PrayerSpaceList spaces={spaces} showHeroButton={true} />
+          </Suspense>
         )}
       </div>
       </div>

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { PrayerSpace } from "@/lib/types";
 import PrayerSpaceCard from "./PrayerSpaceCard";
@@ -29,17 +30,58 @@ interface SpaceWithDistance extends PrayerSpace {
 }
 
 export default function PrayerSpaceList({ spaces, showHeroButton = false }: PrayerSpaceListProps) {
-  const [selectedCampus, setSelectedCampus] = useState<CampusFilter>("All");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  // Read initial state from URL params
+  const initialCampus = (searchParams.get("campus") as CampusFilter) || "All";
+  const initialShowAll = searchParams.get("showAll") === "true";
+  const initialViewMode = (searchParams.get("view") as ViewMode) || "list";
+
+  const [selectedCampus, setSelectedCampus] = useState<CampusFilter>(initialCampus);
   const [nearMeActive, setNearMeActive] = useState(false);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [spacesWithDistance, setSpacesWithDistance] = useState<SpaceWithDistance[]>(spaces);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
-  const [viewMode, setViewMode] = useState<ViewMode>("list");
-  const [showAll, setShowAll] = useState(false);
+  const [viewMode, setViewMode] = useState<ViewMode>(initialViewMode);
+  const [showAll, setShowAll] = useState(initialShowAll);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const isInitialMount = useRef(true);
 
   const INITIAL_DISPLAY_COUNT = isMobile ? 6 : 9;
+
+  // Update URL when state changes
+  const updateURL = useCallback((params: { campus?: CampusFilter; showAll?: boolean; view?: ViewMode }) => {
+    const newParams = new URLSearchParams(searchParams.toString());
+
+    if (params.campus !== undefined) {
+      if (params.campus === "All") {
+        newParams.delete("campus");
+      } else {
+        newParams.set("campus", params.campus);
+      }
+    }
+
+    if (params.showAll !== undefined) {
+      if (params.showAll) {
+        newParams.set("showAll", "true");
+      } else {
+        newParams.delete("showAll");
+      }
+    }
+
+    if (params.view !== undefined) {
+      if (params.view === "list") {
+        newParams.delete("view");
+      } else {
+        newParams.set("view", params.view);
+      }
+    }
+
+    const newURL = newParams.toString() ? `?${newParams.toString()}` : "/";
+    router.replace(newURL, { scroll: false });
+  }, [searchParams, router]);
 
   // Detect mobile/desktop for initial display count
   useEffect(() => {
@@ -57,10 +99,12 @@ export default function PrayerSpaceList({ spaces, showHeroButton = false }: Pray
       // Scroll to top when collapsing
       window.scrollTo({ top: 0, behavior: 'smooth' });
       setShowAll(false);
+      updateURL({ showAll: false });
     } else {
       // Trigger animation when expanding
       setIsAnimating(true);
       setShowAll(true);
+      updateURL({ showAll: true });
       // Reset animation state after animation completes
       setTimeout(() => setIsAnimating(false), 1000);
     }
@@ -123,9 +167,15 @@ export default function PrayerSpaceList({ spaces, showHeroButton = false }: Pray
     }
   }, [nearMeActive, spaces]);
 
-  // Reset showAll when filters change
+  // Reset showAll when filters change (but not on initial mount)
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
     setShowAll(false);
+    updateURL({ showAll: false });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCampus, nearMeActive, viewMode]);
 
   // Filter spaces based on selected campus
@@ -166,7 +216,11 @@ export default function PrayerSpaceList({ spaces, showHeroButton = false }: Pray
         <div className="flex items-center gap-3">
           <span className="text-sm font-medium text-gray-700">List</span>
           <button
-            onClick={() => setViewMode(viewMode === "list" ? "map" : "list")}
+            onClick={() => {
+              const newMode = viewMode === "list" ? "map" : "list";
+              setViewMode(newMode);
+              updateURL({ view: newMode });
+            }}
             className={`relative inline-flex h-7 w-14 items-center rounded-full transition-colors duration-200 ease-in-out focus:outline-none border-0 shadow-sm ${
               viewMode === "map" ? "bg-umn-maroon" : "bg-gray-300"
             }`}
@@ -214,8 +268,10 @@ export default function PrayerSpaceList({ spaces, showHeroButton = false }: Pray
             <select
               value={selectedCampus}
               onChange={(e) => {
-                setSelectedCampus(e.target.value as CampusFilter);
+                const newCampus = e.target.value as CampusFilter;
+                setSelectedCampus(newCampus);
                 setNearMeActive(false);
+                updateURL({ campus: newCampus });
               }}
               className="appearance-none bg-gray-50 border-[0.5px] border-gray-200 rounded-md pl-3 pr-9 py-2 text-sm text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-300 focus:bg-white cursor-pointer transition-colors"
             >
