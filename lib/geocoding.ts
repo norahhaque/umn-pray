@@ -75,7 +75,7 @@ export function calculateDistance(
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const distance = R * c;
 
-  return Math.round(distance * 10) / 10; // Round to 1 decimal place
+  return Math.round(distance * 100) / 100; // Round to 2 decimal places
 }
 
 function toRad(degrees: number): number {
@@ -98,4 +98,45 @@ export function getUserLocation(): Promise<GeolocationPosition> {
       maximumAge: 300000, // Cache position for 5 minutes
     });
   });
+}
+
+export interface WalkingDistanceResult {
+  distance: number; // in miles
+  duration: number; // in minutes
+}
+
+/**
+ * Get walking distances and times from origin to multiple destinations
+ * Uses our API route which calls Google Maps Distance Matrix API
+ */
+export async function getWalkingDistances(
+  origin: { lat: number; lng: number },
+  destinations: { lat: number; lng: number }[]
+): Promise<(WalkingDistanceResult | null)[]> {
+  try {
+    const response = await fetch('/api/walking-distances', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ origin, destinations }),
+    });
+
+    if (!response.ok) {
+      console.error('Walking distances API request failed');
+      return destinations.map(() => null);
+    }
+
+    const data = await response.json();
+
+    if (data.error) {
+      console.error('Walking distances API error:', data.error);
+      return destinations.map(() => null);
+    }
+
+    return data.results;
+  } catch (error) {
+    console.error('Error calling walking distances API:', error);
+    return destinations.map(() => null);
+  }
 }

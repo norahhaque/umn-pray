@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { PrayerSpace } from "@/lib/types";
 import PrayerSpaceCard from "./PrayerSpaceCard";
-import { getUserLocation, calculateDistance, geocodeAddress } from "@/lib/geocoding";
+import { getUserLocation, geocodeAddress, getWalkingDistances } from "@/lib/geocoding";
 
 // Dynamically import MapView with SSR disabled
 const MapView = dynamic(() => import("@/components/MapView"), {
@@ -27,6 +27,7 @@ type ViewMode = "list" | "map";
 
 interface SpaceWithDistance extends PrayerSpace {
   distance?: number;
+  walkingTime?: number;
 }
 
 export default function PrayerSpaceList({ spaces, showHeroButton = false }: PrayerSpaceListProps) {
@@ -142,13 +143,12 @@ export default function PrayerSpaceList({ spaces, showHeroButton = false }: Pray
       setUserLocation({ lat: userLat, lng: userLng });
       setNearMeActive(true);
 
-      // Calculate distances and geocode if needed
-      const spacesWithDist = await Promise.all(
+      // First, ensure all spaces have coordinates (geocode if needed)
+      const spacesWithCoords = await Promise.all(
         spaces.map(async (space) => {
           let spaceLat = space.latitude;
           let spaceLng = space.longitude;
 
-          // If coordinates missing, geocode the address
           if (!spaceLat || !spaceLng) {
             const geocoded = await geocodeAddress(space.address);
             if (geocoded) {
@@ -157,13 +157,32 @@ export default function PrayerSpaceList({ spaces, showHeroButton = false }: Pray
             }
           }
 
-          if (spaceLat && spaceLng) {
-            const distance = calculateDistance(userLat, userLng, spaceLat, spaceLng);
-            return { ...space, distance };
-          }
-          return { ...space, distance: undefined };
+          return { space, lat: spaceLat, lng: spaceLng };
         })
       );
+
+      // Filter spaces that have valid coordinates
+      const validSpaces = spacesWithCoords.filter(s => s.lat && s.lng);
+      const destinations = validSpaces.map(s => ({ lat: s.lat!, lng: s.lng! }));
+
+      // Get walking distances and times from Google Distance Matrix API
+      const walkingResults = await getWalkingDistances(
+        { lat: userLat, lng: userLng },
+        destinations
+      );
+
+      // Combine results with spaces
+      const spacesWithDist: SpaceWithDistance[] = spaces.map(space => {
+        const idx = validSpaces.findIndex(s => s.space._id === space._id);
+        if (idx !== -1 && walkingResults[idx]) {
+          return {
+            ...space,
+            distance: walkingResults[idx]!.distance,
+            walkingTime: walkingResults[idx]!.duration,
+          };
+        }
+        return { ...space, distance: undefined, walkingTime: undefined };
+      });
 
       // Sort by distance
       spacesWithDist.sort((a, b) => {
@@ -341,6 +360,7 @@ export default function PrayerSpaceList({ spaces, showHeroButton = false }: Pray
                     <PrayerSpaceCard
                       space={space}
                       distance={nearMeActive ? space.distance : undefined}
+                      walkingTime={nearMeActive ? space.walkingTime : undefined}
                     />
                   </div>
                 );
