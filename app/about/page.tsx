@@ -64,31 +64,31 @@ export default function AboutPage() {
               VISIBILITY
             </h2>
             <p className="text-base text-gray-800 leading-relaxed">
-              This is where UMNPray comes in! Visibility is about making sure students actually
-              know these spaces exist and can find them easily.
+              Visibility is about making sure students actually
+              know these spaces exist and can find them easily. This is where UMNPray comes in!
             </p>
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="my-12">
+        {/* Divider
+        <div className="my-20">
           <hr className="border-t border-umn-green/20 max-w-2xl mx-auto" />
-        </div>
+        </div> */}
 
         {/* About Us Section */}
-        <div className="max-w-5xl mx-auto mt-10 mb-8">
+        <div className="max-w-5xl mx-auto mt-24 mb-8">
           <h1 className={`${leagueSpartan.className} text-3xl md:text-4xl font-bold text-umn-maroon mb-6 text-center`}>
             About Us
           </h1>
 
           <div>
-            <p className="text-base text-gray-800 leading-relaxed mb-4 text-center">
+            <p className="text-sm text-gray-800 leading-relaxed mb-4 text-center">
               The DEI Committees of the Undergraduate Student Government and the CSE Student Board
               exist to uplift student voices and advocate for a campus environment where all students
               are supported.
             </p>
 
-            <p className="text-base text-gray-800 leading-relaxed text-center">
+            <p className="text-sm text-gray-800 leading-relaxed text-center">
               The Wellbeing Project project grew out of listening, listening to students who struggled
               to find a place to offer their religious ritual, reflect, or decompress and recognizing
               that these challenges aren&apos;t isolated experiences but systemic gaps in the university system.

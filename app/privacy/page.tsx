@@ -39,17 +39,10 @@ export default function PrivacyPage() {
             When you use the &ldquo;Sort by Distance&rdquo; feature, we request access to your device&apos;s location only to calculate the distance between your current position and available prayer spaces.
           </p>
           <p className="text-base text-gray-700 leading-relaxed mb-4">
-            Your location data is:
+            Your location data is processed entirely within your web browser and never stored, retained, or shared in any form. The data is used only for distance calculations and is then discarded once this is complete. 
           </p>
-          <ul className="list-disc pl-6 text-base text-gray-700 mb-4 space-y-2">
-            <li>Processed entirely within your web browser</li>
-            <li>Used only for distance calculations</li>
-            <li>Never stored or retained in any form</li>
-            <li>Never shared with third parties</li>
-            <li>Immediately discarded after distance calculations are complete</li>
-          </ul>
           <p className="text-base text-gray-700 leading-relaxed mb-4">
-            You have full control over location access and may deny permission at any time through your browser settings. Denying location access will not affect your ability to browse prayer spaces; you simply will not be able to sort them by distance from your location.
+            You have full control over location access and may deny permission at any time through your browser settings. Denying location access will not affect your ability to browse prayer spaces, you simply will not be able to sort them by distance from your location.
           </p>
         </section>
 

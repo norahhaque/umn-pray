@@ -40,9 +40,9 @@ export default async function PrayerSpaceDetailPage({
   const mapUrl = `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${encodeURIComponent(mapQuery)}&zoom=17`;
   const googleMapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
 
-  // Process photos for carousel
+  // Process photos for carousel (1200x1600 for sharp retina display)
   const photoUrls = space.photos?.map((photo) =>
-    urlFor(photo).width(900).height(1200).quality(85).url()
+    urlFor(photo).width(1200).height(1600).quality(85).url()
   ) || [];
 
   return (
