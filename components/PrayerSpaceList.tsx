@@ -259,22 +259,6 @@ export default function PrayerSpaceList({ spaces, showHeroButton = false }: Pray
 
   return (
     <div>
-      {/* Mobile Hero CTA Button - Only shown on mobile when showHeroButton is true */}
-      {showHeroButton && (
-        <div className="lg:hidden mb-8">
-          <button
-            onClick={handleFindNearest}
-            disabled={isLoadingLocation}
-            className="w-full flex items-center justify-center gap-2 bg-umn-maroon text-white px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-umn-maroon-light transition-colors shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            {isLoadingLocation ? 'Finding...' : 'Sort by Distance'}
-          </button>
-        </div>
-      )}
 
       {/* Filter Bar */}
       <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
@@ -304,30 +288,40 @@ export default function PrayerSpaceList({ spaces, showHeroButton = false }: Pray
 
         {/* Filters - Right side */}
         <div className="flex gap-3 flex-wrap items-center">
-          {/* Sort by Distance button - shown on desktop in list view only */}
-          {viewMode === "list" && (
-            <button
-              onClick={() => {
-                if (nearMeActive) {
-                  setNearMeActive(false);
-                } else {
-                  handleFindNearest();
-                }
-              }}
-              disabled={isLoadingLocation}
-              className={`hidden lg:inline-flex items-center gap-2 pl-3 pr-4 py-2 rounded-lg text-sm font-semibold transition-all shadow-sm ${
-                nearMeActive
-                  ? "bg-umn-maroon text-white hover:shadow-md"
-                  : "bg-umn-maroon text-white hover:shadow-md"
-              } disabled:opacity-50 disabled:cursor-not-allowed`}
-            >
+          {/* Location pin toggle - sort by distance */}
+          <button
+            onClick={() => {
+              if (nearMeActive) {
+                setNearMeActive(false);
+              } else {
+                handleFindNearest();
+              }
+            }}
+            disabled={isLoadingLocation}
+            className={`p-2 rounded-lg transition-all ${
+              nearMeActive
+                ? "bg-umn-maroon text-white shadow-md"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            } disabled:opacity-50 disabled:cursor-not-allowed`}
+            title={nearMeActive ? "Clear distance sort" : "Sort by distance"}
+            aria-label={nearMeActive ? "Clear distance sort" : "Sort by distance"}
+          >
+            {isLoadingLocation ? (
+              <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+              </svg>
+            ) : nearMeActive ? (
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+              </svg>
+            ) : (
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              {nearMeActive ? 'Clear Distance Sort' : 'Sort by Distance'}
-            </button>
-          )}
+            )}
+          </button>
 
           {/* Campus Filter Dropdown */}
           <div className="relative">
