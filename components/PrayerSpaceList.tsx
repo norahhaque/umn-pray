@@ -200,6 +200,28 @@ export default function PrayerSpaceList({ spaces, showHeroButton = false }: Pray
     }
   };
 
+  // Auto-sort by distance if location permission was previously granted
+  useEffect(() => {
+    async function checkAndAutoSort() {
+      // Check if Permissions API is supported
+      if (!navigator.permissions) return;
+
+      try {
+        const permission = await navigator.permissions.query({ name: 'geolocation' });
+        if (permission.state === 'granted') {
+          // User already granted permission, auto-sort
+          handleFindNearest();
+        }
+      } catch (error) {
+        // Permissions API not supported or error, do nothing
+        console.log('Could not check location permission:', error);
+      }
+    }
+
+    checkAndAutoSort();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Reset to original list when near me is turned off
   useEffect(() => {
     if (!nearMeActive) {
