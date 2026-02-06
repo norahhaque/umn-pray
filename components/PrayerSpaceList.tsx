@@ -192,8 +192,14 @@ export default function PrayerSpaceList({ spaces, showHeroButton = false }: Pray
       });
 
       setSpacesWithDistance(spacesWithDist);
+
+      // Remember that the user opted into distance sorting (for iOS Safari
+      // where the Permissions API doesn't support geolocation queries)
+      try { localStorage.setItem('umn-pray-distance-sort', 'true'); } catch {}
     } catch (error) {
       console.error('Error getting location:', error);
+      // If auto-sort failed (user revoked permission), clear the flag
+      try { localStorage.removeItem('umn-pray-distance-sort'); } catch {}
       alert('Unable to get your location. Please enable location services.');
     } finally {
       setIsLoadingLocation(false);
@@ -203,18 +209,23 @@ export default function PrayerSpaceList({ spaces, showHeroButton = false }: Pray
   // Auto-sort by distance if location permission was previously granted
   useEffect(() => {
     async function checkAndAutoSort() {
-      // Check if Permissions API is supported
-      if (!navigator.permissions) return;
-
-      try {
-        const permission = await navigator.permissions.query({ name: 'geolocation' });
-        if (permission.state === 'granted') {
-          // User already granted permission, auto-sort
-          handleFindNearest();
+      // First try the Permissions API (works on Chrome/Android)
+      if (navigator.permissions) {
+        try {
+          const permission = await navigator.permissions.query({ name: 'geolocation' });
+          if (permission.state === 'granted') {
+            handleFindNearest();
+            return;
+          }
+        } catch {
+          // Permissions API doesn't support geolocation query (e.g. iOS Safari)
         }
-      } catch (error) {
-        // Permissions API not supported or error, do nothing
-        console.log('Could not check location permission:', error);
+      }
+
+      // Fallback: check localStorage flag (for iOS Safari and other browsers
+      // where the Permissions API doesn't support geolocation)
+      if (localStorage.getItem('umn-pray-distance-sort') === 'true') {
+        handleFindNearest();
       }
     }
 
@@ -257,8 +268,37 @@ export default function PrayerSpaceList({ spaces, showHeroButton = false }: Pray
 
   const hasMore = viewMode === "list" && filteredSpaces.length > INITIAL_DISPLAY_COUNT;
 
+  const handleToggleNearMe = () => {
+    if (nearMeActive) {
+      setNearMeActive(false);
+      try { localStorage.removeItem('umn-pray-distance-sort'); } catch {}
+    } else {
+      handleFindNearest();
+    }
+  };
+
   return (
     <div>
+      {/* Mobile Hero CTA Button - Only shown on mobile when showHeroButton is true */}
+      {showHeroButton && (
+        <div className="lg:hidden mb-8">
+          <button
+            onClick={handleToggleNearMe}
+            disabled={isLoadingLocation}
+            className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors shadow-md disabled:opacity-50 disabled:cursor-not-allowed ${
+              nearMeActive
+                ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                : "bg-umn-maroon text-white hover:bg-umn-maroon-light"
+            }`}
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            {isLoadingLocation ? 'Finding...' : nearMeActive ? 'Clear Distance Sort' : 'Sort by Distance'}
+          </button>
+        </div>
+      )}
 
       {/* Filter Bar */}
       <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
@@ -288,17 +328,11 @@ export default function PrayerSpaceList({ spaces, showHeroButton = false }: Pray
 
         {/* Filters - Right side */}
         <div className="flex gap-3 flex-wrap items-center">
-          {/* Location pin toggle - sort by distance */}
+          {/* Location pin toggle - desktop only */}
           <button
-            onClick={() => {
-              if (nearMeActive) {
-                setNearMeActive(false);
-              } else {
-                handleFindNearest();
-              }
-            }}
+            onClick={handleToggleNearMe}
             disabled={isLoadingLocation}
-            className={`p-2 rounded-lg transition-all ${
+            className={`hidden lg:flex p-2 rounded-lg transition-all ${
               nearMeActive
                 ? "bg-umn-maroon text-white shadow-md"
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
