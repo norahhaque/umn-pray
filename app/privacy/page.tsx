@@ -56,16 +56,11 @@ export default function PrivacyPage() {
         <section className="mb-8">
           <h2 className="text-xl font-semibold text-umn-maroon mb-4">Third-Party Services</h2>
           <p className="text-base text-gray-700 leading-relaxed mb-4">
-            Our website utilizes the following third-party services:
+            Our website utilizes Google Maps API to display interactive maps and calculate geographic distances. Google&apos;s use of location data is governed by their own privacy policy.
           </p>
-          <ul className="list-disc pl-6 text-base text-gray-700 mb-4 space-y-2">
-            <li>
-              <span className="text-umn-maroon font-medium">Google Maps API:</span> Used to display interactive maps and calculate geographic distances. Google&apos;s use of location data is governed by their own privacy policy.
-            </li>
-            <li>
-              <span className="text-umn-maroon font-medium">Sanity CMS:</span> Used to manage and deliver prayer space information. No user data is transmitted to Sanity.
-            </li>
-          </ul>
+          <p className="text-base text-gray-700 leading-relaxed mb-4">
+            We also use Sanity CMS to manage and deliver prayer space information. No user data is transmitted to Sanity.
+          </p>
         </section>
 
         <section className="mb-8">

@@ -27,7 +27,7 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* Three Goals - Creative Layout */}
+        {/* Three Goals */}
 
         {/* Goal 1: Quantity */}
         <div className="mb-10">
@@ -52,7 +52,7 @@ export default function AboutPage() {
             <p className="text-base text-gray-800 leading-relaxed text-right">
               A space is only meaningful if it is usable. We advocate for spaces that meet a basic
               standard of care, such as being quiet, private, and equipped with essential amenities
-              such as prayer rugs and mats.
+              like prayer rugs and mats.
             </p>
           </div>
         </div>
