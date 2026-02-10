@@ -150,11 +150,11 @@ export default defineType({
       title: "Photos",
       type: "array",
       of: [{ type: "image" }],
-      description: "Upload at 1-5 photos of the prayer space",
+      description: "Upload at 1-10 photos of the prayer space",
       options: {
         layout: "grid",
       },
-      validation: (Rule) => Rule.max(5),
+      validation: (Rule) => Rule.max(10),
     }),
   ],
 
