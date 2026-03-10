@@ -53,7 +53,7 @@ export default async function HomePage() {
             className="text-umn-maroon"
             style={{
               fontFamily: "var(--font-league-spartan)",
-              fontSize: "clamp(92px, 13vw, 130px)",
+              fontSize: "clamp(72px, 20vw, 130px)",
               fontWeight: 700,
               lineHeight: 0.75,
               marginBottom: 0,
@@ -77,7 +77,7 @@ export default async function HomePage() {
         </div>
 
         {/* Main content section */}
-        <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-12 md:py-12">
+        <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-12 md:py-12">
           {spaces.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-umn-gray mb-4">
