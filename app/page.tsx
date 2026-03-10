@@ -59,7 +59,12 @@ export default async function HomePage() {
               marginBottom: 0,
             }}
           >
-            <span className="block text-umn-maroon/30" style={{ fontSize: '0.82em', marginBottom: '0.1em' }}>UMN</span>
+            <span
+              className="block text-umn-maroon/30 text-[0.76em]"
+              style={{ marginBottom: "0.1em" }}
+            >
+              UMN
+            </span>
             <HeroTyping />
           </h1>
           <p
@@ -77,7 +82,7 @@ export default async function HomePage() {
         </div>
 
         {/* Main content section */}
-        <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-12 md:py-12">
+        <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-12 md:py-12">
           {spaces.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-umn-gray mb-4">

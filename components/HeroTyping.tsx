@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 
-const WORDS = ["PRAY", "REFLECT", "WORSHIP"];
+const WORDS = ["PRAY", "REFLECT", "UNWIND"];
 const TYPE_SPEED = 95;
 const ERASE_SPEED = 55;
 const PAUSE_AFTER = 1800;
