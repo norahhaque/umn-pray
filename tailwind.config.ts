@@ -26,6 +26,7 @@ const config: Config = {
 
         "umn-beige": "#CBC5AF",
         "umn-beige-light": "#E0DBCA",
+        "umn-cream": "#F5F2E8",
         "umn-beige-dark": "#B0AA92",
 
         "umn-brown": "#8C8274",

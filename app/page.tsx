@@ -1,10 +1,9 @@
 import Script from "next/script";
-import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 import { getAllPrayerSpaces } from "@/lib/queries";
 import PrayerSpaceList from "@/components/PrayerSpaceList";
-import heroImage from "@/public/images/umn-twin-cities-northrop.jpg";
+import HeroTyping from "@/components/HeroTyping";
 
 /**
  * Home Page - Lists all prayer spaces
@@ -18,18 +17,19 @@ export default async function HomePage() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "UMN Pray",
-    "url": "https://umnpray.org",
-    "description": "Find prayer and reflection spaces at the University of Minnesota Twin Cities campus",
-    "publisher": {
+    name: "UMN Pray",
+    url: "https://umnpray.org",
+    description:
+      "Find prayer and reflection spaces at the University of Minnesota Twin Cities campus",
+    publisher: {
       "@type": "Organization",
-      "name": "UMN Student Government & CSE Student Board",
+      name: "UMN Student Government & CSE Student Board",
     },
-    "potentialAction": {
+    potentialAction: {
       "@type": "SearchAction",
-      "target": "https://umnpray.org/?q={search_term_string}",
-      "query-input": "required name=search_term_string"
-    }
+      target: "https://umnpray.org/?q={search_term_string}",
+      "query-input": "required name=search_term_string",
+    },
   };
 
   return (
@@ -44,68 +44,64 @@ export default async function HomePage() {
         strategy="beforeInteractive"
       />
       <div>
-        {/* Hero Section with background image */}
-      <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden">
-        {/* Next.js Image with blur placeholder */}
-        <Image
-          src={heroImage}
-          alt="UMN Twin Cities Northrop"
-          fill
-          priority
-          placeholder="blur"
-          className="object-cover"
-          sizes="100vw"
-        />
-
-        {/* White overlay for subtle lightening effect */}
-        <div className="absolute inset-0 bg-white opacity-[0.06]" />
-
-        {/* Text overlay */}
-        <div className="absolute inset-0 flex flex-col justify-end pb-12 md:pb-14 px-2 md:px-8 lg:px-10 z-10">
+        {/* Hero Section */}
+        <div
+          className="w-full flex flex-col px-4 md:px-8 lg:px-10 pt-16 pb-8 md:pb-6"
+          style={{ minHeight: "clamp(220px, 30vw, 340px)" }}
+        >
           <h1
-            className="text-white"
+            className="text-umn-maroon"
             style={{
-              fontFamily: 'var(--font-league-spartan)',
-              fontSize: 'clamp(82px, 10vw, 115px)',
+              fontFamily: "var(--font-league-spartan)",
+              fontSize: "clamp(92px, 13vw, 130px)",
               fontWeight: 700,
               lineHeight: 0.75,
-              marginBottom: 0
+              marginBottom: 0,
             }}
           >
-            UMN PRAY
+            <span className="block text-umn-maroon/30" style={{ fontSize: '0.82em', marginBottom: '0.1em' }}>UMN</span>
+            <HeroTyping />
           </h1>
           <p
-            className="text-white max-w-md"
+            className="text-umn-maroon/60 max-w-md"
             style={{
-              fontFamily: 'var(--font-inter)',
-              fontSize: 'clamp(18px, 2vw, 20px)',
+              fontFamily: "var(--font-inter)",
+              fontSize: "clamp(15px, 1.8vw, 18px)",
               fontWeight: 400,
               lineHeight: 1,
-              marginTop: 'clamp(-3px, -0.7vw, -6px)'
+              marginTop: "clamp(6px, 1vw, 4px)",
             }}
           >
             Prayer, reflection, and quiet spaces at the University of Minnesota
           </p>
         </div>
-      </div>
 
-      {/* Main content section */}
-      <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {spaces.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-umn-gray mb-4">
-              No prayer spaces have been added yet.
-            </p>
-            <p className="text-sm text-umn-gray">
-              Visit <Link href="/studio" className="text-umn-maroon hover:underline">/studio</Link> to add prayer spaces.
-            </p>
-          </div>
-        ) : (
-          <Suspense fallback={<div className="text-center py-12">Loading...</div>}>
-            <PrayerSpaceList spaces={spaces} showHeroButton={true} />
-          </Suspense>
-        )}
-      </div>
+        {/* Main content section */}
+        <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-12 md:py-12">
+          {spaces.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-umn-gray mb-4">
+                No prayer spaces have been added yet.
+              </p>
+              <p className="text-sm text-umn-gray">
+                Visit{" "}
+                <Link
+                  href="/studio"
+                  className="text-umn-maroon hover:underline"
+                >
+                  /studio
+                </Link>{" "}
+                to add prayer spaces.
+              </p>
+            </div>
+          ) : (
+            <Suspense
+              fallback={<div className="text-center py-12">Loading...</div>}
+            >
+              <PrayerSpaceList spaces={spaces} showHeroButton={true} />
+            </Suspense>
+          )}
+        </div>
       </div>
     </>
   );

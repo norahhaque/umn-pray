@@ -59,7 +59,7 @@ export default function RootLayout({
       <body className="antialiased m-0 p-0 bg-white">
         {/* Header with logo on left */}
         <header className="bg-white border-b border-umn-light-gray">
-          <div className="py-4 pl-2 md:pl-10">
+          <div className="py-4 pl-2 pr-4 md:pl-10 md:pr-10 flex items-center justify-between">
             <Link href="/" className="flex items-center">
               <Image
                 src="/images/logo.png"
@@ -68,6 +68,9 @@ export default function RootLayout({
                 height={40}
                 className="h-10 w-auto"
               />
+            </Link>
+            <Link href="/about" className="text-sm text-umn-maroon hover:underline font-medium">
+              About
             </Link>
           </div>
         </header>
